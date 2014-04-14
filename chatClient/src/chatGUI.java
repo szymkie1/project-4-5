@@ -7,7 +7,7 @@ import javax.swing.event.DocumentListener;
 
 import java.awt.event.*;
 
-
+//HI
 @SuppressWarnings("serial")
 public class chatGUI extends JFrame implements ActionListener{
 	

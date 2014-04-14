@@ -2,6 +2,8 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import java.awt.event.*;
 
@@ -18,13 +20,17 @@ public class chatGUI extends JFrame implements ActionListener{
 	private JPanel serverChatWindow;
 	private JPanel serverContainer;
 	private JLabel connectLabel,chatLabel;
-	private JTextArea serverTextArea;
+	private JTextField serverTextArea;
 	private JButton clientConnect, clientDisconnect, clientExit;
 	private JPanel clientButtonPanel;
 	private JPanel clientConnects;
 	private JPanel clientChatWindow;
 	private JPanel clientContainer;
-	private JTextArea clientTextArea;
+	private JTextField clientTextArea;
+	private JButton serverMultipleMessages;
+	private JButton clientMultipleMessages;
+	
+	
 	
 	
 	
@@ -70,11 +76,14 @@ public class chatGUI extends JFrame implements ActionListener{
 		serverDisconnect.addActionListener(this);
 		serverExit = new JButton("Exit");
 		serverExit.addActionListener(this);
+		serverMultipleMessages = new JButton("Private Message");
+		serverMultipleMessages.addActionListener(this);
 		
 		serverButtonPanel = new JPanel();
 		serverButtonPanel.add(serverConnect);
 		serverButtonPanel.add(serverDisconnect);
 		serverButtonPanel.add(serverExit);
+		serverButtonPanel.add(serverMultipleMessages);
 		
 		serverPanel.add(serverButtonPanel, BorderLayout.NORTH);
 		
@@ -84,6 +93,7 @@ public class chatGUI extends JFrame implements ActionListener{
 		serverConnects = new JPanel();
 		Border connectBorder = BorderFactory.createLineBorder(Color.black);
 		serverConnects.setBorder(connectBorder);
+		serverConnects.setBackground(Color.WHITE);
 		c.gridx=0;
 		c.gridy=1;
 		c.weightx=0.1;
@@ -104,6 +114,7 @@ public class chatGUI extends JFrame implements ActionListener{
 		serverChatWindow = new JPanel();
 		Border chatBorder = BorderFactory.createLineBorder(Color.black);
 		serverChatWindow.setBorder(chatBorder);
+		serverChatWindow.setBackground(Color.WHITE);
 		c.gridx=1;
 		c.gridy=1;
 		c.ipadx=700;
@@ -119,8 +130,13 @@ public class chatGUI extends JFrame implements ActionListener{
 		
 		serverPanel.add(serverContainer);
 		
-		serverTextArea = new JTextArea("Type Here",2,1);
+		
 
+		
+		
+		
+		serverTextArea = new JTextField();
+		serverTextArea.addActionListener(this);
 		serverPanel.add(serverTextArea,BorderLayout.SOUTH);
 		
 		
@@ -158,6 +174,7 @@ public class chatGUI extends JFrame implements ActionListener{
 		clientConnects = new JPanel();
 		Border connectBorder = BorderFactory.createLineBorder(Color.black);
 		clientConnects.setBorder(connectBorder);
+		clientConnects.setBackground(Color.WHITE);
 		c.gridx=0;
 		c.gridy=1;
 		c.weightx=0.1;
@@ -166,18 +183,19 @@ public class chatGUI extends JFrame implements ActionListener{
 		
 		
 		
-		clientContainer.add(serverConnects,c);
+		clientContainer.add(clientConnects,c);
 		
 		connectLabel = new JLabel("Connections");
 		c.gridx=0;
 		c.gridy=0;
 		c.ipady=0;
 		c.ipadx=0;
-		serverContainer.add(connectLabel,c);
+		clientContainer.add(connectLabel,c);
 		
 		clientChatWindow = new JPanel();
 		Border chatBorder = BorderFactory.createLineBorder(Color.black);
 		clientChatWindow.setBorder(chatBorder);
+		clientChatWindow.setBackground(Color.WHITE);
 		c.gridx=1;
 		c.gridy=1;
 		c.ipadx=700;
@@ -193,9 +211,11 @@ public class chatGUI extends JFrame implements ActionListener{
 		
 		clientPanel.add(clientContainer);
 		
-		clientTextArea = new JTextArea("Type Here",2,1);
-
+		clientTextArea = new JTextField();
+		clientTextArea.addActionListener(this);
 		clientPanel.add(clientTextArea,BorderLayout.SOUTH);
+		
+		
 		
 		
 		revalidate();
@@ -211,6 +231,8 @@ public class chatGUI extends JFrame implements ActionListener{
 		}
 		
 		else if(e.getSource() == clientButton){
+			
+			setClientGUI();
 			
 		}
 		
@@ -237,11 +259,53 @@ public class chatGUI extends JFrame implements ActionListener{
 		else if(e.getSource() == clientDisconnect){
 			
 		}
+		else if(e.getSource() == serverTextArea){
+			String line = serverTextArea.getText();
+			System.out.println(line);
+			serverTextArea.setText(null);
+		}
+		else if(e.getSource() == clientTextArea){
+			String line = clientTextArea.getText();
+			System.out.println(line);
+			clientTextArea.setText(null);
+			
+		}
+		else if(e.getSource() == serverMultipleMessages){
+			JTextField people = new JTextField(25);
+			JTextField message = new JTextField(50);
+			JLabel peopleLabel = new JLabel("Enter the people you wish to \n"
+					+ "chat with separated with a space\n.");
+			JLabel messageLabel = new JLabel("Enter your message \n");
+			
+			JPanel privateMessagePanel = new JPanel(new GridLayout(4,1));
+			privateMessagePanel.add(peopleLabel);
+			privateMessagePanel.add(people);
+			
+			privateMessagePanel.add(messageLabel);
+			privateMessagePanel.add(message);
+			
+			int result =
+					JOptionPane.showConfirmDialog(
+							null,
+							privateMessagePanel,
+							"Enter your message and recipients",
+							JOptionPane.OK_CANCEL_OPTION);
+			if(result == JOptionPane.OK_OPTION){
+				System.out.println(people.getText());
+				System.out.println(message.getText());
+			}
+					
+			
+			
+					
+		}
 		else{
 			System.out.println("Problem with button press");
 		}
 		
 	}
+
+	
 	
 	
 	
