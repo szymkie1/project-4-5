@@ -15,19 +15,19 @@ public class chatGUI extends JFrame implements ActionListener{
 	private JLabel welcomeLabel;
 	private JPanel firstPanel, clientPanel;
 	private JLabel connectLabel,chatLabel;
+	private JTextField serverTextArea;
 	private JButton clientConnect, clientDisconnect, clientExit;
 	private JPanel clientButtonPanel;
 	private JPanel clientConnects;
-	private JTextArea clientChatWindow;
+	private JPanel clientChatWindow;
 	private JPanel clientContainer;
 	private JTextField clientTextArea;
 	private JButton clientMultipleMessages;
 	private JButton serverConnect;
 	private JPanel serverPanel;
 	private JTextField portTextField;
-	private int serverPort;
+	private int port;
 	private JPanel serverInfoPanel;
-	private JScrollPane chatScrollPane;
 	
 	
 	
@@ -66,7 +66,7 @@ public class chatGUI extends JFrame implements ActionListener{
 		
 		remove(firstPanel);
 		
-		setSize(300,200);
+		setSize(100,400);
 		
 		serverPanel = new JPanel(new GridLayout(3,1));
 		add(serverPanel);
@@ -75,8 +75,6 @@ public class chatGUI extends JFrame implements ActionListener{
 		serverPanel.add(serverWelcome,SwingConstants.CENTER);
 		
 		portTextField = new JTextField();
-		portTextField.setEditable(false);
-		portTextField.setText("0");
 		serverPanel.add(portTextField);
 		
 		
@@ -145,8 +143,7 @@ public class chatGUI extends JFrame implements ActionListener{
 		c.ipadx=0;
 		clientContainer.add(connectLabel,c);
 		
-		chatScrollPane = new JScrollPane();
-		clientChatWindow = new JTextArea();
+		clientChatWindow = new JPanel();
 		Border chatBorder = BorderFactory.createLineBorder(Color.black);
 		clientChatWindow.setBorder(chatBorder);
 		clientChatWindow.setBackground(Color.WHITE);
@@ -154,8 +151,7 @@ public class chatGUI extends JFrame implements ActionListener{
 		c.gridy=1;
 		c.ipadx=700;
 		c.ipady=600;
-		chatScrollPane.add(clientChatWindow);
-		clientContainer.add(chatScrollPane,c);
+		clientContainer.add(clientChatWindow,c);
 		
 		chatLabel = new JLabel("Chat");
 		c.gridx=1;
@@ -177,18 +173,6 @@ public class chatGUI extends JFrame implements ActionListener{
 		
 	}
 	
-	public int getServerPort(){
-		return serverPort;
-	}
-	
-	public JPanel getConnectWindow(){
-		return clientConnects;
-	}
-	
-	public JTextArea getChatWindow(){
-		return clientChatWindow;
-	}
-	
 	public void actionPerformed(ActionEvent e) {
 		
 		if(e.getSource() == serverButton){
@@ -205,13 +189,12 @@ public class chatGUI extends JFrame implements ActionListener{
 		
 		else if(e.getSource() == serverConnect){
 			String tempPort = portTextField.getText();
-			serverPort = Integer.parseInt(tempPort);
+			port = Integer.parseInt(tempPort);
 			remove(serverPanel);
 			serverInfoPanel = new JPanel();
 			add(serverInfoPanel);
 			JLabel info = new JLabel("You are connected to port: "+tempPort);
 			serverInfoPanel.add(info);
-			System.out.println(serverPort);
 			revalidate();
 		}
 		
@@ -226,7 +209,11 @@ public class chatGUI extends JFrame implements ActionListener{
 		else if(e.getSource() == clientDisconnect){
 			
 		}
-		
+		else if(e.getSource() == serverTextArea){
+			String line = serverTextArea.getText();
+			System.out.println(line);
+			serverTextArea.setText(null);
+		}
 		else if(e.getSource() == clientTextArea){
 			String line = clientTextArea.getText();
 			System.out.println(line);

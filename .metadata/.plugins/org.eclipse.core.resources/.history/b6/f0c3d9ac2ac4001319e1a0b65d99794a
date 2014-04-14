@@ -177,18 +177,6 @@ public class chatGUI extends JFrame implements ActionListener{
 		
 	}
 	
-	public int getServerPort(){
-		return serverPort;
-	}
-	
-	public JPanel getConnectWindow(){
-		return clientConnects;
-	}
-	
-	public JTextArea getChatWindow(){
-		return clientChatWindow;
-	}
-	
 	public void actionPerformed(ActionEvent e) {
 		
 		if(e.getSource() == serverButton){

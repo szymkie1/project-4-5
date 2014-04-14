@@ -13,21 +13,22 @@ public class chatGUI extends JFrame implements ActionListener{
 	
 	private JButton serverButton, clientButton;
 	private JLabel welcomeLabel;
-	private JPanel firstPanel, clientPanel;
+	private JPanel firstPanel, serverPanel, clientPanel;
+	private JButton serverConnect, serverDisconnect,serverExit;
+	private JPanel serverButtonPanel;
+	private JPanel serverConnects;
+	private JPanel serverChatWindow;
+	private JPanel serverContainer;
 	private JLabel connectLabel,chatLabel;
+	private JTextField serverTextArea;
 	private JButton clientConnect, clientDisconnect, clientExit;
 	private JPanel clientButtonPanel;
 	private JPanel clientConnects;
-	private JTextArea clientChatWindow;
+	private JPanel clientChatWindow;
 	private JPanel clientContainer;
 	private JTextField clientTextArea;
+	private JButton serverMultipleMessages;
 	private JButton clientMultipleMessages;
-	private JButton serverConnect;
-	private JPanel serverPanel;
-	private JTextField portTextField;
-	private int serverPort;
-	private JPanel serverInfoPanel;
-	private JScrollPane chatScrollPane;
 	
 	
 	
@@ -36,7 +37,7 @@ public class chatGUI extends JFrame implements ActionListener{
 	public chatGUI(){
 		
 		super("Chat Client");
-		setSize(200,100);
+		setSize(1000,750);
 		
 		firstPanel = new JPanel();
 		
@@ -66,24 +67,77 @@ public class chatGUI extends JFrame implements ActionListener{
 		
 		remove(firstPanel);
 		
-		setSize(300,200);
-		
-		serverPanel = new JPanel(new GridLayout(3,1));
+		serverPanel=new JPanel(new BorderLayout());
 		add(serverPanel);
-		
-		JLabel serverWelcome = new JLabel("Enter the port you will connect to");
-		serverPanel.add(serverWelcome,SwingConstants.CENTER);
-		
-		portTextField = new JTextField();
-		portTextField.setEditable(false);
-		portTextField.setText("0");
-		serverPanel.add(portTextField);
-		
 		
 		serverConnect = new JButton("Connect");
 		serverConnect.addActionListener(this);
-		serverPanel.add(serverConnect);
+		serverDisconnect = new JButton("Disconnect");
+		serverDisconnect.addActionListener(this);
+		serverExit = new JButton("Exit");
+		serverExit.addActionListener(this);
+		serverMultipleMessages = new JButton("Private Message");
+		serverMultipleMessages.addActionListener(this);
 		
+		serverButtonPanel = new JPanel();
+		serverButtonPanel.add(serverConnect);
+		serverButtonPanel.add(serverDisconnect);
+		serverButtonPanel.add(serverExit);
+		serverButtonPanel.add(serverMultipleMessages);
+		
+		serverPanel.add(serverButtonPanel, BorderLayout.NORTH);
+		
+		serverContainer = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		
+		serverConnects = new JPanel();
+		Border connectBorder = BorderFactory.createLineBorder(Color.black);
+		serverConnects.setBorder(connectBorder);
+		serverConnects.setBackground(Color.WHITE);
+		c.gridx=0;
+		c.gridy=1;
+		c.weightx=0.1;
+		c.ipady=600;
+		c.ipadx=200;
+		
+		
+		
+		serverContainer.add(serverConnects,c);
+		
+		connectLabel = new JLabel("Connections");
+		c.gridx=0;
+		c.gridy=0;
+		c.ipady=0;
+		c.ipadx=0;
+		serverContainer.add(connectLabel,c);
+		
+		serverChatWindow = new JPanel();
+		Border chatBorder = BorderFactory.createLineBorder(Color.black);
+		serverChatWindow.setBorder(chatBorder);
+		serverChatWindow.setBackground(Color.WHITE);
+		c.gridx=1;
+		c.gridy=1;
+		c.ipadx=700;
+		c.ipady=600;
+		serverContainer.add(serverChatWindow,c);
+		
+		chatLabel = new JLabel("Chat");
+		c.gridx=1;
+		c.gridy=0;
+		c.ipadx=0;
+		c.ipady=0;
+		serverContainer.add(chatLabel,c);
+		
+		serverPanel.add(serverContainer);
+		
+		
+
+		
+		
+		
+		serverTextArea = new JTextField();
+		serverTextArea.addActionListener(this);
+		serverPanel.add(serverTextArea,BorderLayout.SOUTH);
 		
 		
 		revalidate();
@@ -95,11 +149,7 @@ public class chatGUI extends JFrame implements ActionListener{
 	
 	private void setClientGUI(){
 		
-		
-		
 		remove(firstPanel);
-		
-		setSize(1000,750);
 		
 		clientPanel=new JPanel(new BorderLayout());
 		add(clientPanel);
@@ -110,14 +160,11 @@ public class chatGUI extends JFrame implements ActionListener{
 		clientDisconnect.addActionListener(this);
 		clientExit = new JButton("Exit");
 		clientExit.addActionListener(this);
-		clientMultipleMessages = new JButton("Private Message");
-		clientMultipleMessages.addActionListener(this);
 		
 		clientButtonPanel = new JPanel();
 		clientButtonPanel.add(clientConnect);
 		clientButtonPanel.add(clientDisconnect);
 		clientButtonPanel.add(clientExit);
-		clientButtonPanel.add(clientMultipleMessages);
 		
 		clientPanel.add(clientButtonPanel, BorderLayout.NORTH);
 		
@@ -145,8 +192,7 @@ public class chatGUI extends JFrame implements ActionListener{
 		c.ipadx=0;
 		clientContainer.add(connectLabel,c);
 		
-		chatScrollPane = new JScrollPane();
-		clientChatWindow = new JTextArea();
+		clientChatWindow = new JPanel();
 		Border chatBorder = BorderFactory.createLineBorder(Color.black);
 		clientChatWindow.setBorder(chatBorder);
 		clientChatWindow.setBackground(Color.WHITE);
@@ -154,8 +200,7 @@ public class chatGUI extends JFrame implements ActionListener{
 		c.gridy=1;
 		c.ipadx=700;
 		c.ipady=600;
-		chatScrollPane.add(clientChatWindow);
-		clientContainer.add(chatScrollPane,c);
+		clientContainer.add(clientChatWindow,c);
 		
 		chatLabel = new JLabel("Chat");
 		c.gridx=1;
@@ -177,18 +222,6 @@ public class chatGUI extends JFrame implements ActionListener{
 		
 	}
 	
-	public int getServerPort(){
-		return serverPort;
-	}
-	
-	public JPanel getConnectWindow(){
-		return clientConnects;
-	}
-	
-	public JTextArea getChatWindow(){
-		return clientChatWindow;
-	}
-	
 	public void actionPerformed(ActionEvent e) {
 		
 		if(e.getSource() == serverButton){
@@ -203,18 +236,18 @@ public class chatGUI extends JFrame implements ActionListener{
 			
 		}
 		
-		else if(e.getSource() == serverConnect){
-			String tempPort = portTextField.getText();
-			serverPort = Integer.parseInt(tempPort);
-			remove(serverPanel);
-			serverInfoPanel = new JPanel();
-			add(serverInfoPanel);
-			JLabel info = new JLabel("You are connected to port: "+tempPort);
-			serverInfoPanel.add(info);
-			System.out.println(serverPort);
-			revalidate();
+		else if(e.getSource() == serverExit){
+			System.exit(0);
 		}
-		
+		else if(e.getSource() == serverConnect){
+			String port=(String)
+				JOptionPane.showInputDialog("What port do you want to use?");
+			
+			System.out.println(port);
+		}
+		else if(e.getSource() == serverDisconnect){
+			
+		}
 		else if(e.getSource() == clientExit){
 			System.exit(0);
 		}
@@ -226,14 +259,18 @@ public class chatGUI extends JFrame implements ActionListener{
 		else if(e.getSource() == clientDisconnect){
 			
 		}
-		
+		else if(e.getSource() == serverTextArea){
+			String line = serverTextArea.getText();
+			System.out.println(line);
+			serverTextArea.setText(null);
+		}
 		else if(e.getSource() == clientTextArea){
 			String line = clientTextArea.getText();
 			System.out.println(line);
 			clientTextArea.setText(null);
 			
 		}
-		else if(e.getSource() == clientMultipleMessages){
+		else if(e.getSource() == serverMultipleMessages){
 			JTextField people = new JTextField(25);
 			JTextField message = new JTextField(50);
 			JLabel peopleLabel = new JLabel("Enter the people you wish to \n"
