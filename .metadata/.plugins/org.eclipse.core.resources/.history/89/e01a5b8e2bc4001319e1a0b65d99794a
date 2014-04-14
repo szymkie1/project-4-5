@@ -29,7 +29,6 @@ public class chatGUI extends JFrame implements ActionListener{
 	private JPanel serverInfoPanel;
 	private JScrollPane chatScrollPane;
 	private JPanel textContainer;
-	private JButton clientSend;
 	
 	
 	
@@ -171,18 +170,8 @@ public class chatGUI extends JFrame implements ActionListener{
 		textContainer = new JPanel(new BorderLayout());
 		
 		clientMessageArea = new JTextArea();
-		Border messageBorder = BorderFactory.createLineBorder(Color.black);
-		clientMessageArea.setBorder(messageBorder);
-		clientMessageArea.setText("Type Here");
-		
 		textContainer.add(clientMessageArea,BorderLayout.CENTER);
-		
-		
-		clientSend = new JButton("Send");
-		clientSend.addActionListener(this);
-		textContainer.add(clientSend,BorderLayout.EAST);
-		
-		clientPanel.add(textContainer,BorderLayout.SOUTH);
+		clientPanel.add(clientMessageArea,BorderLayout.SOUTH);
 		
 		
 		
@@ -239,10 +228,6 @@ public class chatGUI extends JFrame implements ActionListener{
 		}
 		else if(e.getSource() == clientDisconnect){
 			
-		}
-		
-		else if(e.getSource() == clientSend){
-			System.out.println(clientMessageArea.getText());
 		}
 		
 		

@@ -20,7 +20,7 @@ public class chatGUI extends JFrame implements ActionListener{
 	private JPanel clientConnects;
 	private JTextArea clientChatWindow;
 	private JPanel clientContainer;
-	private JTextArea clientMessageArea;
+	private JTextField clientTextArea;
 	private JButton clientMultipleMessages;
 	private JButton serverConnect;
 	private JPanel serverPanel;
@@ -28,8 +28,6 @@ public class chatGUI extends JFrame implements ActionListener{
 	private int serverPort;
 	private JPanel serverInfoPanel;
 	private JScrollPane chatScrollPane;
-	private JPanel textContainer;
-	private JButton clientSend;
 	
 	
 	
@@ -168,21 +166,9 @@ public class chatGUI extends JFrame implements ActionListener{
 		
 		clientPanel.add(clientContainer);
 		
-		textContainer = new JPanel(new BorderLayout());
-		
-		clientMessageArea = new JTextArea();
-		Border messageBorder = BorderFactory.createLineBorder(Color.black);
-		clientMessageArea.setBorder(messageBorder);
-		clientMessageArea.setText("Type Here");
-		
-		textContainer.add(clientMessageArea,BorderLayout.CENTER);
-		
-		
-		clientSend = new JButton("Send");
-		clientSend.addActionListener(this);
-		textContainer.add(clientSend,BorderLayout.EAST);
-		
-		clientPanel.add(textContainer,BorderLayout.SOUTH);
+		clientTextArea = new JTextField();
+		clientTextArea.addActionListener(this);
+		clientPanel.add(clientTextArea,BorderLayout.SOUTH);
 		
 		
 		
@@ -241,11 +227,12 @@ public class chatGUI extends JFrame implements ActionListener{
 			
 		}
 		
-		else if(e.getSource() == clientSend){
-			System.out.println(clientMessageArea.getText());
+		else if(e.getSource() == clientTextArea){
+			String line = clientTextArea.getText();
+			System.out.println(line);
+			clientTextArea.setText(null);
+			
 		}
-		
-		
 		else if(e.getSource() == clientMultipleMessages){
 			JTextField people = new JTextField(25);
 			JTextField message = new JTextField(50);
