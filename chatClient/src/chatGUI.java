@@ -26,12 +26,12 @@ public class chatGUI extends JFrame implements ActionListener{
 	private JButton serverButton, clientButton;
 	private JLabel welcomeLabel;
 	private JPanel firstPanel, clientPanel;
-	private JLabel connectLabel,chatLabel;
+	//private JLabel connectLabel,chatLabel;
 	private JButton clientConnect, clientDisconnect, clientExit;
 	private JPanel clientButtonPanel;
-	private JPanel clientConnects;
-	private JTextArea clientChatWindow;
-	private JPanel clientContainer;
+	//private JPanel clientConnects;
+	//private JTextArea clientChatWindow;
+	//private JPanel clientContainer;
 	private JTextArea clientMessageArea;
 	private JButton clientMultipleMessages;
 	private JButton serverConnect;
@@ -39,10 +39,15 @@ public class chatGUI extends JFrame implements ActionListener{
 	private JTextField portTextField;
 	private int serverPort;
 	private JPanel serverInfoPanel;
-	private JScrollPane chatScrollPane;
+	//private JScrollPane chatScrollPane;
 	private JPanel textContainer;
 	private JButton clientSend;
 	private String userName=null;
+	
+	private JPanel chatContainer;
+	private JTextArea chatArea;
+	private JScrollPane chatAreaScroll;
+	private JPanel connectionPanel;
 	
 	
 	
@@ -220,113 +225,119 @@ public class chatGUI extends JFrame implements ActionListener{
 		//add the panel to the top of the container panel
 		clientPanel.add(clientButtonPanel, BorderLayout.NORTH);
 		
-		//clientContainer is another container JPanel
-		//that will contain the chat connects and the chat window
-		//GridBagLayout provides the most customization options
-		clientContainer = new JPanel(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
 		
-		//set up JPanel that will show the clients currently connected.
-		//Place this panel on the left side of the client window
-		clientConnects = new JPanel();
-		Border connectBorder = BorderFactory.createLineBorder(Color.black);
-		clientConnects.setBorder(connectBorder);
-		clientConnects.setBackground(Color.WHITE);
-		c.gridx=0;
-		c.gridy=1;
-		c.weightx=0.1;
-		c.ipady=600;
-		c.ipadx=200;
+		//set up a new JPanel that will be in the middle of the page
+		//add some padding around the panel as a border
+		chatContainer = new JPanel(new BorderLayout());
+		Border panelBorder = 
+				BorderFactory.createEmptyBorder(30,30,30,30);
+		chatContainer.setBorder(panelBorder);
 		
-		clientContainer.add(clientConnects,c);
+		//create a new text area on the right side of the page
+		chatArea = new JTextArea(5,55);
+		chatArea.setEditable(false);
 		
-		//label the panel
-		connectLabel = new JLabel("Connections");
-		c.gridx=0;
-		c.gridy=0;
-		c.ipady=0;
-		c.ipadx=0;
-		clientContainer.add(connectLabel,c);
+		//add a scroll pane to that text area
+		chatAreaScroll = new JScrollPane (chatArea);
+		
+		//set the scroll pane so that the scroll bars are visible 
+		//so the user knows they are there
+        chatAreaScroll.setVerticalScrollBarPolicy 
+                          (ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        chatAreaScroll.setHorizontalScrollBarPolicy 
+        				(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        //set border that indicates this is a chat window
+		Border chatAreaBorder = BorderFactory.createTitledBorder("Chat Window");
+		chatAreaScroll.setBorder(chatAreaBorder);
+		
+		//create a new JPanel to keep track of current connections
+		connectionPanel = new JPanel();
+		connectionPanel.setPreferredSize(new Dimension(225,100));
+		//create a border to display what this is
+		Border connectionPanelBorder = 
+				BorderFactory.createTitledBorder("Chat Connections");
+		connectionPanel.setBorder(connectionPanelBorder);
+		connectionPanel.setBackground(Color.WHITE);
+		
+	
+		//add the components to the container panel
+		chatContainer.add(chatAreaScroll,BorderLayout.EAST);
+		chatContainer.add(connectionPanel,BorderLayout.WEST);
+		clientPanel.add(chatContainer);
 		
 		
-		//set up a JTextArea that will function as the main chat window
-		//a scroll bar has been added to keep track of longer conversations
-		//This area will be on the middle-right side of the page
-		//This text area cannot be edited
-		chatScrollPane = new JScrollPane();
-		clientChatWindow = new JTextArea();
-		Border chatBorder = BorderFactory.createLineBorder(Color.black);
-		clientChatWindow.setBorder(chatBorder);
-		clientChatWindow.setBackground(Color.WHITE);
-		c.gridx=1;
-		c.gridy=1;
-		c.ipadx=700;
-		c.ipady=600;
-		chatScrollPane.add(clientChatWindow);
-		clientContainer.add(chatScrollPane,c);
-		
-		chatLabel = new JLabel("Chat");
-		c.gridx=1;
-		c.gridy=0;
-		c.ipadx=0;
-		c.ipady=0;
-		clientContainer.add(chatLabel,c);
-		
-		clientPanel.add(clientContainer);
-		
+		//set up a new panel that will be used to enter messages
+		//and send them to the server for display
 		textContainer = new JPanel(new BorderLayout());
 		
+		//create text area where messages will be typed
 		clientMessageArea = new JTextArea();
 		Border messageBorder = BorderFactory.createLineBorder(Color.black);
 		clientMessageArea.setBorder(messageBorder);
 		clientMessageArea.setText("Type Here");
 		
+		//add this to the page
 		textContainer.add(clientMessageArea,BorderLayout.CENTER);
 		
-		
+		//create a send button to send message off
 		clientSend = new JButton("Send");
 		clientSend.addActionListener(this);
 		textContainer.add(clientSend,BorderLayout.EAST);
 		
+		//add to the window
 		clientPanel.add(textContainer,BorderLayout.SOUTH);
-		
-		
-		
 		
 		revalidate();
 		
 	}
 	
+	/*****************
+	 * These getters are used by the server and client
+	 * portions of the program
+	 * 
+	 */
 	public int getServerPort(){
 		return serverPort;
 	}
 	
 	public JPanel getConnectWindow(){
-		return clientConnects;
+		return connectionPanel;
 	}
 	
 	public JTextArea getChatWindow(){
-		return clientChatWindow;
+		return chatArea;
 	}
 	
 	public String getUsername(){
 		return userName;
 	}
 	
+	public JTextArea getCurrentLine(){
+		return clientMessageArea;
+	}
+	
+	/*****************
+	 * This method allows for interaction when buttons are pressed
+	 */
 	public void actionPerformed(ActionEvent e) {
 		
+		//if server button is pressed,  start GUI for server portion
 		if(e.getSource() == serverButton){
 			
 			setServerGUI();
 			
 		}
 		
+		//if client button is pressed,  start GUI for client portion
 		else if(e.getSource() == clientButton){
 			
 			setClientGUI();
 			
 		}
 		
+		//if using as server,  after connnect has been pressed,
+		//set the port to the class variable and switch panels
+		//that displays the port
 		else if(e.getSource() == serverConnect){
 			String tempPort = portTextField.getText();
 			serverPort = Integer.parseInt(tempPort);
@@ -339,23 +350,40 @@ public class chatGUI extends JFrame implements ActionListener{
 			revalidate();
 		}
 		
+		//exit the window
 		else if(e.getSource() == clientExit){
 			System.exit(0);
 		}
+		
+		//connect as a client
 		else if(e.getSource() == clientConnect){
-			String port=(String)
-					JOptionPane.showInputDialog("What port do you want to use?");
-			System.out.println(port);
+			
 		}
+		
+		//disconnect as a client
 		else if(e.getSource() == clientDisconnect){
 			
 		}
 		
+		//send a message as a client
 		else if(e.getSource() == clientSend){
-			System.out.println(clientMessageArea.getText());
+			
+			
 		}
 		
-		
+		//private message as a client
+		//this code was modified from ideas found at:
+		//http://stackoverflow.com/questions/6555040/
+		//multiple-input-in-joptionpane-showinputdialog
+		//The fields are initialized as JTextFields that are placed into
+		//a JPanel
+		//This panel has a gridLayout and the previous fields are added to the
+		//panel.  Then JOptionPane is passed this panel and a 
+		//window with the fields and "Cancel" and "OK" appears.
+		//If text is entered and OK is pressed,  a private message should be sent
+		//this code was modified from the original source
+		//through the different text areas that are needed and the way
+		//that the panel was set up.
 		else if(e.getSource() == clientMultipleMessages){
 			JTextField people = new JTextField(25);
 			JTextField message = new JTextField(50);
@@ -370,13 +398,13 @@ public class chatGUI extends JFrame implements ActionListener{
 			privateMessagePanel.add(messageLabel);
 			privateMessagePanel.add(message);
 			
-			int result =
+			int check =
 					JOptionPane.showConfirmDialog(
 							null,
 							privateMessagePanel,
 							"Enter your message and recipients",
 							JOptionPane.OK_CANCEL_OPTION);
-			if(result == JOptionPane.OK_OPTION){
+			if(check == JOptionPane.OK_OPTION){
 				System.out.println(people.getText());
 				System.out.println(message.getText());
 			}
