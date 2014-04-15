@@ -234,6 +234,14 @@ public class chatGUI extends JFrame implements ActionListener{
 		
 		//add a scroll pane to that text area
 		chatAreaScroll = new JScrollPane (chatArea);
+		
+		//set the scroll pane so that the scroll bars are visible 
+		//so the user knows they are there
+        chatAreaScroll.setVerticalScrollBarPolicy 
+                      (ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        chatAreaScroll.setHorizontalScrollBarPolicy 
+        			  (ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        //set border that indicates this is a chat window
 		Border chatAreaBorder = BorderFactory.createTitledBorder("Chat Window");
 		chatAreaScroll.setBorder(chatAreaBorder);
 		
