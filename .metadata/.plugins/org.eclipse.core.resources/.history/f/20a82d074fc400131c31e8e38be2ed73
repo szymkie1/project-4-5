@@ -11,7 +11,7 @@ import java.util.Random;
 /**************************
  * 
  * @author Ryan Szymkiewicz
- *  written for CS 342, Spring 2014 Project 4
+ *  written for CS 342, Spring 2014
  *  
  *  The purpose of this file is to provide the GUI for our networked
  *  chat application.  There are options for both a server and client GUI
@@ -23,12 +23,15 @@ public class chatGUI extends JFrame implements ActionListener{
 	
 	//these class variables will be used throughout the file.
 	//they will be described as they are used
-	
 	private JButton serverButton, clientButton;
 	private JLabel welcomeLabel;
 	private JPanel firstPanel, clientPanel;
+	//private JLabel connectLabel,chatLabel;
 	private JButton clientConnect, clientDisconnect, clientExit;
 	private JPanel clientButtonPanel;
+	//private JPanel clientConnects;
+	//private JTextArea clientChatWindow;
+	//private JPanel clientContainer;
 	private JTextArea clientMessageArea;
 	private JButton clientMultipleMessages;
 	private JButton serverConnect;
@@ -36,9 +39,11 @@ public class chatGUI extends JFrame implements ActionListener{
 	private JTextField portTextField;
 	private int serverPort;
 	private JPanel serverInfoPanel;
+	//private JScrollPane chatScrollPane;
 	private JPanel textContainer;
 	private JButton clientSend;
 	private String userName=null;
+	
 	private JPanel chatContainer;
 	private JTextArea chatArea;
 	private JScrollPane chatAreaScroll;
